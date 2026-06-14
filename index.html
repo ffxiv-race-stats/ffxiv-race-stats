@@ -243,6 +243,7 @@
       grid-template-columns: 1fr 280px;
       gap: 32px;
       margin-bottom: 48px;
+      align-items: start;
     }
     @media (max-width: 860px) { .main-grid { grid-template-columns: 1fr; } }
 
@@ -288,6 +289,28 @@
       z-index: 1;
     }
     .crt-row:last-child { border-bottom: none; }
+    .crt-row.is-hidden { display: none; }
+    .crt-expand {
+      display: block;
+      width: 100%;
+      padding: 10px 0 0;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-align: center;
+      cursor: pointer;
+      border: 2px solid transparent;
+      background: none;
+      transition: color 0.12s;
+    }
+    .crt-expand:hover { color: var(--accent); }
+    .sponsor-item {
+      padding: 8px 0;
+      border-bottom: 2px solid var(--border);
+    }
+    .sponsor-item:first-child { padding-top: 4px; }
+    .sponsor-item.is-hidden { display: none; }
     .crt-rank { font-size: 18px; color: var(--muted); text-align: center; }
     .crt-rank.n1 { color: var(--accent); }
     .crt-rank.n2 { color: var(--fg); }
@@ -340,6 +363,7 @@
       border: 2px solid var(--border);
       padding: 16px;
       margin-bottom: 16px;
+      background: var(--surface);
     }
     .sidebar-card h3 {
       font-family: var(--font-mono);
@@ -353,6 +377,20 @@
     .meta-list { list-style: none; font-size: 12px; line-height: 1.8; }
     .meta-list dt { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; color: var(--muted); text-transform: uppercase; }
     .meta-list dd { margin-bottom: 6px; }
+    .timer-display {
+      font-family: var(--font-mono);
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--fg);
+    }
+    .timer-meta {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
 
     /* ---- NEWS ---- */
     .news-section { margin-bottom: 48px; }
@@ -404,6 +442,30 @@
     }
     .placeholder-slot h2 { margin-bottom: 8px; }
     .placeholder-slot p  { font-size: 12px; color: var(--muted); margin: 0 auto; }
+
+    /* ---- EXPAND POPUP EFFECT ---- */
+    .ranking-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 900;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .ranking-overlay.is-on {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .crt-module.is-popped,
+    .sidebar-card.is-popped,
+    #noticeCard.is-popped {
+      position: relative;
+      z-index: 901;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+    }
 
     /* ---- RESPONSIVE ---- */
     @media (max-width: 960px) {
@@ -467,11 +529,23 @@
   <section class="hero">
     <div class="hero-body">
       <h1 class="anim-entry">[当届赛事名称]<span class="live-pulse">LIVE</span></h1>
-      <p class="deck anim-entry">
-        10 支队伍、80 名选手同步竞速，首杀归属尚未决出。点击职业徽标跳转选手直播第一视角，每一条速报都在改写排名。
-      </p>
-      <div class="hero-actions anim-entry">
-        <a href="#archive" class="btn btn--ghost">往期年鉴</a>
+      <div style="display:flex;align-items:flex-start;gap:12px;margin-top:8px;max-width:72ch">
+        <div class="deck anim-entry" id="noticeCard" style="flex:1;min-width:0;border:2px solid var(--border);padding:10px 14px;background:var(--surface)">
+          <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase">赛事公告</span>
+          <div class="sponsor-item">
+            <p style="margin-top:2px;font-size:12px;line-height:1.5;color:var(--fg)">[公告内容占位] — 此处用于展示赛事相关公告、规则变更、重要时间节点等信息。</p>
+          </div>
+          <div class="sponsor-item is-hidden">
+            <p style="font-size:12px;line-height:1.5;color:var(--fg)">[第二条公告] — 赛事报名将于 2026-06-09 截止，请各队伍尽快完成报名确认。</p>
+          </div>
+          <div class="sponsor-item is-hidden">
+            <p style="font-size:12px;line-height:1.5;color:var(--fg)">[第三条公告] — 赛事规则已更新至 v2.1，请查看规则文档了解变更详情。</p>
+          </div>
+          <button class="crt-expand" id="noticeExpand" style="padding-bottom:0">展开全部 3 条 +</button>
+        </div>
+        <div class="hero-actions anim-entry" style="margin-top:0;flex-shrink:0">
+          <a href="#register" class="btn" style="background:var(--accent);border-color:var(--accent)">立即报名</a>
+        </div>
       </div>
     </div>
     <div class="broadcast-module anim-entry" id="broadcastModule">
@@ -488,15 +562,38 @@
     </div>
 
     <aside>
-      <div class="sidebar-card anim-entry">
-        <h3>赛事信息</h3>
-        <dl class="meta-list">
-          <dt>副本</dt><dd>[副本名称]</dd>
-          <dt>Boss</dt><dd>[Boss 名称]</dd>
-          <dt>数据中心</dt><dd>[数据中心]</dd>
-          <dt>参赛队伍</dt><dd>10 支 · 80 名选手</dd>
-          <dt>赛程</dt><dd>2026-06-10 起</dd>
-        </dl>
+      <div class="sidebar-card anim-entry" id="raceTimer">
+        <h3>开赛计时</h3>
+        <div class="timer-display" id="timerDisplay">+00:00:00</div>
+        <div class="timer-meta">2026-06-10 起</div>
+      </div>
+      <div class="sidebar-card anim-entry" id="sponsorCard">
+        <h3>赞助公示</h3>
+        <div class="sponsor-item">
+          <p style="font-weight:600">[赞助商 A]</p>
+          <p style="font-size:11px;color:var(--muted);line-height:1.4">官方指定硬件合作伙伴，为赛事提供直播设备与网络支持。</p>
+        </div>
+        <div class="sponsor-item">
+          <p style="font-weight:600">[赞助商 B]</p>
+          <p style="font-size:11px;color:var(--muted);line-height:1.4">赛事奖金赞助，为前三名队伍提供奖金支持。</p>
+        </div>
+        <div class="sponsor-item">
+          <p style="font-weight:600">[赞助商 C]</p>
+          <p style="font-size:11px;color:var(--muted);line-height:1.4">解说直播间与转播技术支持。</p>
+        </div>
+        <div class="sponsor-item is-hidden">
+          <p style="font-weight:600">[赞助商 D]</p>
+          <p style="font-size:11px;color:var(--muted);line-height:1.4">赛事网站服务器与带宽支持。</p>
+        </div>
+        <div class="sponsor-item is-hidden">
+          <p style="font-weight:600">[赞助商 E]</p>
+          <p style="font-size:11px;color:var(--muted);line-height:1.4">选手周边与纪念品提供。</p>
+        </div>
+        <div class="sponsor-item is-hidden">
+          <p style="font-weight:600">[赞助商 F]</p>
+          <p style="font-size:11px;color:var(--muted);line-height:1.4">社区推广与社交媒体运营支持。</p>
+        </div>
+        <button class="crt-expand" id="sponsorExpand">展开全部 6 项 +</button>
       </div>
       <div class="sidebar-card anim-entry" id="streamCoverCard">
         <h3>直播覆盖</h3>
@@ -528,6 +625,27 @@
       var teams = RACE_DATA.teams;
       var news  = RACE_DATA.news;
       var broadcasters = RACE_DATA.broadcasters;
+      var startTime = new Date(RACE_DATA.meta.startTime).getTime();
+
+      // ---- LIVE TIMER ----
+      function pad2(n) { return (n < 10 ? '0' : '') + n; }
+      function formatElapsed(ms) {
+        var totalSec = Math.floor(ms / 1000);
+        var h = Math.floor(totalSec / 3600);
+        var m = Math.floor((totalSec % 3600) / 60);
+        var s = totalSec % 60;
+        return '+' + pad2(h) + ':' + pad2(m) + ':' + pad2(s);
+      }
+      function tick() {
+        var elapsed = Date.now() - startTime;
+        var str = formatElapsed(elapsed > 0 ? elapsed : 0);
+        var disp = document.getElementById('timerDisplay');
+        if (disp) disp.textContent = str;
+        var st = document.getElementById('statusTimer');
+        if (st) st.textContent = '开赛 ' + str;
+      }
+      tick();
+      setInterval(tick, 1000);
 
       // ---- RENDER TEAM ROWS ----
       var tableEl = document.getElementById('teamTable');
@@ -546,8 +664,9 @@
       }
 
       function renderTeamRow(t, idx) {
+        var hiddenClass = idx >= 10 ? ' is-hidden' : '';
         var html = '';
-        html += '<div class="crt-row">';
+        html += '<div class="crt-row' + hiddenClass + '">';
         html += '  <span class="crt-rank' + rankClass(idx) + '">#' + t.rank + '</span>';
         html += '  <span class="crt-team-name">' + t.name + ' <span class="crt-region">[' + (t.region || '??') + ']</span></span>';
         html += '  <div class="crt-comp">';
@@ -566,6 +685,66 @@
       }
 
       tableEl.innerHTML = teams.map(renderTeamRow).join('');
+
+      // ---- OVERLAY SETUP ----
+      var overlay = document.createElement('div');
+      overlay.className = 'ranking-overlay';
+      document.body.appendChild(overlay);
+      var rankingModule = document.getElementById('rankingModule');
+      var sponsorCard = document.getElementById('sponsorCard');
+      var noticeCard = document.getElementById('noticeCard');
+
+      function dismissAll() {
+        if (expanded) { expanded = false; hiddenRows.forEach(function (r) { r.classList.add('is-hidden'); }); expandBtn.textContent = '展开全部 ' + teams.length + ' 队 +'; }
+        if (sponsorExpanded) { sponsorExpanded = false; sponsorHidden.forEach(function (r) { r.classList.add('is-hidden'); }); sponsorBtn.textContent = '展开全部 ' + sponsorCount + ' 项 +'; }
+        if (noticeExpanded) { noticeExpanded = false; noticeHidden.forEach(function (r) { r.classList.add('is-hidden'); }); noticeBtn.textContent = '展开全部 ' + noticeCount + ' 条 +'; }
+        rankingModule.classList.remove('is-popped');
+        sponsorCard.classList.remove('is-popped');
+        noticeCard.classList.remove('is-popped');
+        overlay.classList.remove('is-on');
+      }
+      overlay.addEventListener('click', dismissAll);
+
+      // ---- RANKING EXPAND ----
+      var expandBtn = document.createElement('button');
+      expandBtn.className = 'crt-expand';
+      var expanded = false;
+      var hiddenRows = tableEl.querySelectorAll('.is-hidden');
+      expandBtn.textContent = '展开全部 ' + teams.length + ' 队 +';
+      expandBtn.addEventListener('click', function () {
+        expanded = !expanded;
+        hiddenRows.forEach(function (r) { r.classList.toggle('is-hidden', !expanded); });
+        rankingModule.classList.toggle('is-popped', expanded);
+        overlay.classList.toggle('is-on', expanded);
+        expandBtn.textContent = expanded ? '收起' : '展开全部 ' + teams.length + ' 队 +';
+      });
+      tableEl.parentNode.insertBefore(expandBtn, tableEl.nextSibling);
+
+      // ---- SPONSOR EXPAND ----
+      var sponsorBtn = document.getElementById('sponsorExpand');
+      var sponsorHidden = sponsorCard.querySelectorAll('.sponsor-item.is-hidden');
+      var sponsorCount = sponsorCard.querySelectorAll('.sponsor-item').length;
+      var sponsorExpanded = false;
+      sponsorBtn.addEventListener('click', function () {
+        sponsorExpanded = !sponsorExpanded;
+        sponsorHidden.forEach(function (r) { r.classList.toggle('is-hidden', !sponsorExpanded); });
+        sponsorCard.classList.toggle('is-popped', sponsorExpanded);
+        overlay.classList.toggle('is-on', sponsorExpanded);
+        sponsorBtn.textContent = sponsorExpanded ? '收起' : '展开全部 ' + sponsorCount + ' 项 +';
+      });
+
+      // ---- NOTICE EXPAND ----
+      var noticeBtn = document.getElementById('noticeExpand');
+      var noticeHidden = noticeCard.querySelectorAll('.sponsor-item.is-hidden');
+      var noticeCount = noticeCard.querySelectorAll('.sponsor-item').length;
+      var noticeExpanded = false;
+      noticeBtn.addEventListener('click', function () {
+        noticeExpanded = !noticeExpanded;
+        noticeHidden.forEach(function (r) { r.classList.toggle('is-hidden', !noticeExpanded); });
+        noticeCard.classList.toggle('is-popped', noticeExpanded);
+        overlay.classList.toggle('is-on', noticeExpanded);
+        noticeBtn.textContent = noticeExpanded ? '收起' : '展开全部 ' + noticeCount + ' 条 +';
+      });
 
       // ---- RENDER NEWS ----
       var tickerEl = document.getElementById('newsTicker');

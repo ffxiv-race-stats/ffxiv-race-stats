@@ -142,6 +142,46 @@ const RACE_DATA = {
         { job: "RDM", role: "dps", stream: "#", streaming: false },
         { job: "DNC", role: "dps", stream: "#", streaming: false }
       ]
+    },
+    { id: "t11", name: "[队伍名 11]", rank: 11, bossHP: 100.0, phase: "P1", region: "EU", isLive: false,
+      players: [
+        { job: "GNB", role: "tank", stream: "#", streaming: false }, { job: "DRK", role: "tank", stream: "#", streaming: false },
+        { job: "SGE", role: "healer", stream: "#", streaming: false }, { job: "AST", role: "healer", stream: "#", streaming: false },
+        { job: "RPR", role: "dps", stream: "#", streaming: false }, { job: "VPR", role: "dps", stream: "#", streaming: false },
+        { job: "SMN", role: "dps", stream: "#", streaming: false }, { job: "BRD", role: "dps", stream: "#", streaming: false }
+      ]
+    },
+    { id: "t12", name: "[队伍名 12]", rank: 12, bossHP: 100.0, phase: "P1", region: "JP", isLive: false,
+      players: [
+        { job: "PLD", role: "tank", stream: "#", streaming: false }, { job: "WAR", role: "tank", stream: "#", streaming: false },
+        { job: "WHM", role: "healer", stream: "#", streaming: false }, { job: "SCH", role: "healer", stream: "#", streaming: false },
+        { job: "MNK", role: "dps", stream: "#", streaming: false }, { job: "DRG", role: "dps", stream: "#", streaming: false },
+        { job: "BLM", role: "dps", stream: "#", streaming: false }, { job: "MCH", role: "dps", stream: "#", streaming: false }
+      ]
+    },
+    { id: "t13", name: "[队伍名 13]", rank: 13, bossHP: 100.0, phase: "P1", region: "NA", isLive: false,
+      players: [
+        { job: "DRK", role: "tank", stream: "#", streaming: false }, { job: "GNB", role: "tank", stream: "#", streaming: false },
+        { job: "AST", role: "healer", stream: "#", streaming: false }, { job: "SGE", role: "healer", stream: "#", streaming: false },
+        { job: "SAM", role: "dps", stream: "#", streaming: false }, { job: "NIN", role: "dps", stream: "#", streaming: false },
+        { job: "RDM", role: "dps", stream: "#", streaming: false }, { job: "DNC", role: "dps", stream: "#", streaming: false }
+      ]
+    },
+    { id: "t14", name: "[队伍名 14]", rank: 14, bossHP: 100.0, phase: "P1", region: "OC", isLive: false,
+      players: [
+        { job: "WAR", role: "tank", stream: "#", streaming: false }, { job: "PLD", role: "tank", stream: "#", streaming: false },
+        { job: "SCH", role: "healer", stream: "#", streaming: false }, { job: "WHM", role: "healer", stream: "#", streaming: false },
+        { job: "DRG", role: "dps", stream: "#", streaming: false }, { job: "VPR", role: "dps", stream: "#", streaming: false },
+        { job: "SMN", role: "dps", stream: "#", streaming: false }, { job: "BRD", role: "dps", stream: "#", streaming: false }
+      ]
+    },
+    { id: "t15", name: "[队伍名 15]", rank: 15, bossHP: 100.0, phase: "P1", region: "EU", isLive: false,
+      players: [
+        { job: "GNB", role: "tank", stream: "#", streaming: false }, { job: "DRK", role: "tank", stream: "#", streaming: false },
+        { job: "WHM", role: "healer", stream: "#", streaming: false }, { job: "AST", role: "healer", stream: "#", streaming: false },
+        { job: "RPR", role: "dps", stream: "#", streaming: false }, { job: "MNK", role: "dps", stream: "#", streaming: false },
+        { job: "BLM", role: "dps", stream: "#", streaming: false }, { job: "MCH", role: "dps", stream: "#", streaming: false }
+      ]
     }
   ],
 
