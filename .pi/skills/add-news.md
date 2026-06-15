@@ -35,7 +35,9 @@
 { id: "<max_id + 1>", time: "2026-06-15 18:30", title: "...", urgent: true/false }
 ```
 
-### Step 4: 提交
+### Step 4: 提交（到预览分支）
+
+**注意：此时修改只是推到了 `content/*` 分支，生产站还没有生效。**
 
 ```bash
 git checkout -b content/add-news-<id>
@@ -44,8 +46,33 @@ git commit -m "content: add news - <标题>"
 git push -u origin content/add-news-<id>
 ```
 
-### Step 5: 汇报
+### Step 5: 汇报 + 索要合并确认 ⚠️ 必须执行
+
+**这一步绝对不能跳过。** Push 完成后，必须向运营输出以下内容：
 
 ```
-速报已发布，预览链接：https://<commit>.ffxiv-race-stats.pages.dev
+✅ 速报已推送，预览生效：
+   https://<commit>.ffxiv-race-stats.pages.dev
+
+⚠️ 生产站 https://ffxiv-race-stats.pages.dev 还没有更新。
+   请打开预览链接确认内容无误后，回复"合并"或"merge"。
+   我会帮你把改动合入 main 分支并自动部署到生产站。
+```
+
+**在没有收到运营的"合并"确认之前，不要继续。**
+
+### Step 6: 合并（需运营确认）
+
+运营确认后执行：
+```bash
+git checkout main
+git merge content/add-news-<id>
+git push
+git branch -D content/add-news-<id>
+git push origin --delete content/add-news-<id>
+```
+
+然后汇报：
+```
+✅ 已合并到 main，生产站即将自动更新：https://ffxiv-race-stats.pages.dev
 ```

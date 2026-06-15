@@ -33,7 +33,9 @@
 - 添加时：`id` 基于最大已有 id + 1
 - 无重复名称
 
-### Step 4: 修改并提交
+### Step 4: 修改并提交（到预览分支）
+
+**注意：此时修改只是推到了 `content/*` 分支，生产站还没有生效。**
 
 ```bash
 git checkout -b content/update-broadcaster-<名称>
@@ -42,8 +44,33 @@ git commit -m "content: update broadcaster - <名称>"
 git push -u origin content/update-broadcaster-<名称>
 ```
 
-### Step 5: 汇报
+### Step 5: 汇报 + 索要合并确认 ⚠️ 必须执行
+
+**这一步绝对不能跳过。** Push 完成后，必须向运营输出以下内容：
 
 ```
-转播方已更新，预览链接：https://<commit>.ffxiv-race-stats.pages.dev
+✅ 转播方已推送，预览生效：
+   https://<commit>.ffxiv-race-stats.pages.dev
+
+⚠️ 生产站 https://ffxiv-race-stats.pages.dev 还没有更新。
+   请打开预览链接确认内容无误后，回复"合并"或"merge"。
+   我会帮你把改动合入 main 分支并自动部署到生产站。
+```
+
+**在没有收到运营的"合并"确认之前，不要继续。**
+
+### Step 6: 合并（需运营确认）
+
+运营确认后执行：
+```bash
+git checkout main
+git merge content/update-broadcaster-<名称>
+git push
+git branch -D content/update-broadcaster-<名称>
+git push origin --delete content/update-broadcaster-<名称>
+```
+
+然后汇报：
+```
+✅ 已合并到 main，生产站即将自动更新：https://ffxiv-race-stats.pages.dev
 ```

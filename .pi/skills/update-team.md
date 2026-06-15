@@ -35,7 +35,9 @@
 
 直接编辑 `data.js` 中该队伍的对应字段。
 
-### Step 5: 提交
+### Step 5: 提交（到预览分支）
+
+**注意：此时修改只是推到了 `content/*` 分支，生产站 `ffxiv-race-stats.pages.dev` 还没有生效。**
 
 ```bash
 git checkout -b content/update-<队伍id>-<新phase>
@@ -44,19 +46,33 @@ git commit -m "content: update <队伍名> to <新phase> (HP <新HP>%)"
 git push -u origin content/update-<队伍id>-<新phase>
 ```
 
-### Step 6: 汇报
+### Step 6: 汇报 + 索要合并确认 ⚠️ 必须执行
 
-向运营汇报：
+**这一步绝对不能跳过。** Push 完成后，必须向运营输出以下内容：
+
 ```
-已更新 [队伍名]：P3 → P5，HP 45.8% → 12.0%
-预览链接：https://<commit>.ffxiv-race-stats.pages.dev
-请确认无误后回复"合并"。
+✅ 修改已推送，预览生效：
+   https://<commit>.ffxiv-race-stats.pages.dev
+
+⚠️ 生产站 https://ffxiv-race-stats.pages.dev 还没有更新。
+   请打开预览链接确认内容无误后，回复"合并"或"merge"。
+   我会帮你把改动合入 main 分支并自动部署到生产站。
 ```
+
+**在没有收到运营的"合并"确认之前，不要继续下一步。**
 
 ### Step 7: 合并（需运营确认）
 
 运营确认后执行：
 ```bash
-gh pr create --base main --head content/update-<队伍id>-<新phase> --title "content: update <队伍名>"
-# 运营在浏览器中点击 Merge
+git checkout main
+git merge content/update-<队伍id>-<新phase>
+git push
+git branch -D content/update-<队伍id>-<新phase>
+git push origin --delete content/update-<队伍id>-<新phase>
+```
+
+然后汇报：
+```
+✅ 已合并到 main，生产站即将自动更新：https://ffxiv-race-stats.pages.dev
 ```
