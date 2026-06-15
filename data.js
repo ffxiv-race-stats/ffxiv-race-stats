@@ -53,7 +53,7 @@ const RACE_DATA = {
       ]
     },
     {
-      id: "t4", name: "[队伍名 4]", rank: 4, bossHP: 45.8, phase: "P3", region: "EU", isLive: true,
+      id: "t4", name: "[队伍名 4]", rank: 4, bossHP: 90.0, phase: "P4", region: "EU", isLive: true,
       players: [
         { job: "WAR", role: "tank", stream: "#", streaming: true },
         { job: "GNB", role: "tank", stream: "#", streaming: true },
