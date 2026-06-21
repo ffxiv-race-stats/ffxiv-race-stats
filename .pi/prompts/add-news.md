@@ -16,4 +16,6 @@ argument-hint: "<标题> <内容>"
 5. 按时间降序插入 `news[]`
 6. 自检：标题不超过 50 字，内容无敏感信息
 7. 推送到 `content/add-news-<id>` 分支
-8. 告知运营预览链接
+8. 创建 PR（`gh pr create --base main`）
+9. 告知运营预览链接 + PR 链接，等待确认
+10. 收到确认后，CI 通过则 `gh pr merge --squash --delete-branch`

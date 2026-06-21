@@ -37,9 +37,9 @@ description: >
 
 在 `data.js` 的 `news[]` 数组头部插入新条目。
 
-### Step 4: 提交到预览分支
+### Step 4: 提交到预览分支并创建 PR
 
-**重要：此时只是推到 `content/*` 分支——生产站还不会变。**
+**重要：此时只是推到 `content/*` 分支并创建 PR——生产站还不会变。**
 
 ```bash
 git checkout -b content/add-news-<id>
@@ -48,31 +48,63 @@ git commit -m "content: add news - <标题>"
 git push -u origin content/add-news-<id>
 ```
 
+push 成功后，创建 PR：
+
+```bash
+gh pr create \
+  --title "content: add news - <标题>" \
+  --body "## 变更摘要
+
+- **标题**: <标题>
+- **时间**: <YYYY-MM-DD HH:mm>
+- **紧急**: <是/否>
+
+## 预览
+
+预览链接将由 Cloudflare Pages 自动生成。
+
+---
+🤖 由 PI Agent 自动提交" \
+  --base main
+```
+
 ### Step 5: ⚠️ 输出合并提醒（必须执行，不可跳过）
 
-Push 完成后，必须输出：
+PR 创建完成后，必须输出：
 
 ```
-✅ 速报已推送，预览生效：https://<commit>.ffxiv-race-stats.pages.dev
+✅ PR 已创建：#<N> — https://github.com/<owner>/<repo>/pull/<N>
+   预览链接：https://<commit>.ffxiv-race-stats.pages.dev
+   CI 校验：https://github.com/<owner>/<repo>/actions/runs/<run_id>
 
 ⚠️ 生产站 https://ffxiv-race-stats.pages.dev 还没有更新。
    请打开预览链接确认无误后，回复"合并"。
-   我会把改动合入 main 并自动部署到生产站。
+   我会用 Squash Merge 把改动合入 main 并自动部署到生产站。
 ```
 
 **不收到运营回复"合并"，绝对不继续。**
 
 ### Step 6: 合并（收到运营确认后执行）
 
+收到运营确认后，先确认 CI 已通过：
+
 ```bash
-git checkout main
-git merge content/add-news-<id>
-git push
-git branch -D content/add-news-<id>
-git push origin --delete content/add-news-<id>
+gh pr view <PR_NUMBER> --json state,statusCheckRollup
 ```
 
-然后汇报：
+CI 通过后执行 Squash Merge：
+
+```bash
+gh pr merge <PR_NUMBER> --squash --delete-branch
 ```
-✅ 已合并到 main，生产站即将更新：https://ffxiv-race-stats.pages.dev
+
+如果 CI 未通过：
+1. 读取 CI 错误日志：`gh run view <run_id> --log`
+2. 诊断并修复 `data.js`
+3. Commit + push 到同一 `content/*` 分支（PR 自动更新，CI 自动重跑）
+4. 回到 Step 5，等待运营再次确认
+
+合并成功后汇报：
+```
+✅ 已 Squash Merge 到 main，生产站即将更新：https://ffxiv-race-stats.pages.dev
 ```

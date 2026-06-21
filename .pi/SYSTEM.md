@@ -19,10 +19,18 @@
 ### 写入规则
 
 - 永远不直接修改 `main` 分支
-- 所有数据变更 push 到 `content/<类型>-<描述>` 分支
+- 所有数据变更 push 到 `content/<操作>-<目标>` 分支，然后创建 PR
+- **分支名长度限制**：`content/` 后面的部分 **≤ 20 字符**（ASCII）。
+  原因：Cloudflare Pages 分支别名截断到 28 字符，`content-` 前缀占 8 字符。
+  超出则预览 URL 与实际部署不匹配，运营无法确认。
+  示例：✅ `content/update-t1-p5`（13 字符）  ❌ `content/reorder-ranks-clear-first`（27 字符）
 - 修改前先读取 `data.js` 当前内容
-- 修改后运行自检（schema/风格/逻辑），通过后再 push
-- push 后告知运营预览链接，等待确认
+- 修改后运行 `node scripts/validate-data.js` 自检，通过后再 push
+- push 后通过 `gh pr create --base main` 创建 PR，CI 自动运行
+- push 后自动构造预览链接：`https://<分支名净化>.ffxiv-race-stats.pages.dev`
+  （净化规则：`/` → `-`，全小写，取前 28 字符）
+- PR 创建后告知运营预览链接 + PR 链接，等待确认
+- 收到运营确认后，CI 通过则 `gh pr merge --squash --delete-branch`
 
 ## 沟通规范
 

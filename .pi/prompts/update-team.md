@@ -17,4 +17,6 @@ argument-hint: "<队伍名|队伍ID> <阶段> <HP%>"
    - bossHP 在 0-100 区间，只能减少不能增加
    - 如果 HP 归零且 phase 为最终阶段，该队已通关
 5. 推送到 `content/update-<队伍id>-<阶段>` 分支
-6. 告知运营预览链接
+6. 创建 PR（`gh pr create --base main`）
+7. 告知运营预览链接 + PR 链接，等待确认
+8. 收到确认后，CI 通过则 `gh pr merge --squash --delete-branch`
