@@ -14,4 +14,6 @@ argument-hint: "<添加|删除|更新> <转播方名>"
 3. 必填字段：`name`、`platform`、`url`
 4. 自检：platform 使用标准名称（bilibili/douyu/huya/twitch/youtube），url 可访问
 5. 推送到 `content/update-broadcaster-<名称>` 分支
-6. 告知运营预览链接
+6. 创建 PR（`gh pr create --base main`）
+7. 告知运营预览链接 + PR 链接，等待确认
+8. 收到确认后，CI 通过则 `gh pr merge --squash --delete-branch`

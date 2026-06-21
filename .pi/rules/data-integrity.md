@@ -13,7 +13,7 @@ description: >
 
 ### 结构完整性
 
-- `RACE_DATA` 对象包含全部四个顶层 key：`meta`、`teams`、`news`、`broadcasters`
+- `RACE_DATA` 对象包含全部六个顶层 key：`meta`、`teams`、`news`、`broadcasters`、`notices`、`sponsors`
 - `meta.status` ∈ `{ "upcoming", "live", "ended" }`
 - 每支队伍的 `players[]` 恰好 8 人
 - 每个 player 的 `job` 为合法三字母缩写
@@ -27,6 +27,7 @@ description: >
 - 如果 `bossHP === 0` 且 `phase === PHASE_ORDER` 最后一个阶段，则该队已通关
 - `news[]` 按 `time` 降序排列
 - 每条 news 的 `id` 唯一
+- `broadcasters[]` 每条 `id` 唯一
 
 ### 边界值
 
@@ -44,3 +45,13 @@ description: >
 - 重新读取 `data.js`，确认写入内容与意图一致
 - 运行 `node -e "require('./data.js')"` 等效语法检查（确保文件可解析）
 - 如有任一检查不通过，修复后重新自检，不通过不 push
+- push 后 CI（GitHub Actions）会再次运行相同检查作为独立防线
+
+## CI 失败处理
+
+如果 PR 的 CI 检查不通过：
+1. 读取 CI 错误日志：`gh run view <run_id> --log`
+2. 诊断问题（语法错误？值越界？文件范围违规？）
+3. 修复 `data.js`
+4. Commit + push 到同一 `content/*` 分支（PR 自动更新，CI 自动重跑）
+5. 重新请求运营确认
