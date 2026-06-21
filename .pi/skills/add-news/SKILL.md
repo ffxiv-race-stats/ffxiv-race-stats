@@ -74,7 +74,8 @@ PR 创建完成后，必须输出：
 
 ```
 ✅ PR 已创建：#<N> — https://github.com/<owner>/<repo>/pull/<N>
-   预览链接：https://<commit>.ffxiv-race-stats.pages.dev
+   预览链接：https://<净化后的分支名>.ffxiv-race-stats.pages.dev
+   （分支名净化规则：/ → -，全小写，取前 28 字符）
    CI 校验：https://github.com/<owner>/<repo>/actions/runs/<run_id>
 
 ⚠️ 生产站 https://ffxiv-race-stats.pages.dev 还没有更新。
